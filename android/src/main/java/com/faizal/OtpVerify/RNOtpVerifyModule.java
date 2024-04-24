@@ -2,10 +2,13 @@
 package com.faizal.OtpVerify;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.IntentFilter;
 // import android.support.annotation.NonNull;
 import androidx.annotation.NonNull;
 import android.util.Log;
+import android.os.Build;
+
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
@@ -65,10 +68,23 @@ public class RNOtpVerifyModule extends ReactContextBaseJavaModule implements Lif
     private void registerReceiverIfNecessary(BroadcastReceiver receiver) {
         if (getCurrentActivity() == null) return;
         try {
-            getCurrentActivity().registerReceiver(
+
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                 getCurrentActivity().registerReceiver(
                     receiver,
-                    new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+                    new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
+                    Context.RECEIVER_EXPORTED
             );
+            }
+            else {
+ getCurrentActivity().registerReceiver(
+                    receiver,
+                    new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
+   Context.RECEIVER_NOT_EXPORTED
+            );
+            }
+
             Log.d(TAG, "Receiver Registered");
             isReceiverRegistered = true;
         } catch (Exception e) {
@@ -124,4 +140,3 @@ public class RNOtpVerifyModule extends ReactContextBaseJavaModule implements Lif
     }
 
 }
-
