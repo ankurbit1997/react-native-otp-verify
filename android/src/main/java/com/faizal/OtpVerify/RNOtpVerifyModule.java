@@ -67,6 +67,7 @@ public class RNOtpVerifyModule extends ReactContextBaseJavaModule implements Lif
 
     private void registerReceiverIfNecessary(BroadcastReceiver receiver) {
         if (getCurrentActivity() == null) return;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) return;
         try {
 
              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
