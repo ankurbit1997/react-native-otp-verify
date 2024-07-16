@@ -65,11 +65,9 @@ public class RNOtpVerifyModule extends ReactContextBaseJavaModule implements Lif
     }
 
 
-    private void registerReceiverIfNecessary(BroadcastReceiver receiver) {
+   private void registerReceiverIfNecessary(BroadcastReceiver receiver) {
         if (getCurrentActivity() == null) return;
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) return;
         try {
-
              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
                  getCurrentActivity().registerReceiver(
@@ -79,12 +77,12 @@ public class RNOtpVerifyModule extends ReactContextBaseJavaModule implements Lif
             );
             }
             else {
- getCurrentActivity().registerReceiver(
-                    receiver,
-                    new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
-   Context.RECEIVER_NOT_EXPORTED
-            );
-            }
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 getCurrentActivity().registerReceiver(
+                                    receiver,
+                                    new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION), Context.RECEIVER_NOT_EXPORTED);
+               }
+             }
 
             Log.d(TAG, "Receiver Registered");
             isReceiverRegistered = true;
